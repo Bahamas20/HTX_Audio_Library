@@ -1,0 +1,27 @@
+.background {
+    background-color: black;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: fit-content;
+    padding-bottom: 0.5rem;
+}
+
+.nav-title {
+    color: white;
+    font-size: 1.5rem;
+    margin: 0.5rem;
+    padding-left: 1rem;
+
+}
+
+.title {
+    display: flex;
+    align-items: center;
+}
+
+.audio-icon {
+    color: white;
+    height: 2rem;
+    width: 2rem;
+}

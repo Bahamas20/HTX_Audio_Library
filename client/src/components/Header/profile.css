@@ -1,0 +1,35 @@
+.logout-button {
+    padding: 5px 15px;
+    background-color: white;
+    color:  black;
+    font-weight: bold;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom:5px;
+  }
+
+  .profile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-right: 1rem;
+  }
+
+  .profile-icon {
+    height: 3rem;
+    width: 3rem;
+    background-color: white;
+    border-radius: 50%;
+    justify-content: center;
+    align-items: center;
+    display: flex
+  }
+
+  .profile-text {
+    color: gray;
+    text-align: center;
+    margin-bottom:0.5rem;
+  }
