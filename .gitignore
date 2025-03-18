@@ -2,6 +2,7 @@
 node_modules/
 .pnp
 .pnp.js
+.env
 
 # Client
 client/node_modules/
@@ -37,3 +38,4 @@ yarn-error.log*
 # Logs
 logs/
 *.log
+server/docker-entrypoint-initdb.d/init.sql

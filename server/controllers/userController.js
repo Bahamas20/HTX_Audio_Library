@@ -6,6 +6,9 @@ const SECRET_KEY = process.env.JWT_SECRET_KEY;
 const loginUser = async (req, res) => {
   try {
     const { username, password } = req.body;
+    if (!username || !password) {
+      return res.status(400).json({ message: "Username and password are required" });
+    }
     const userResult = await userModel.getUserByUsername(username);
     
     if (userResult.rows.length === 0) {
@@ -30,6 +33,19 @@ const loginUser = async (req, res) => {
 const createUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
+    if (!username || !email || !password) {
+      return res.status(400).json({ message: "Username, email, and password are required" });
+    }
+    
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ message: "Invalid email format" });
+    }
+
+    if (password.length < 8) {
+      return res.status(400).json({ message: "Password must be at least 8 characters" });
+    }
+
     const existingUser = await userModel.getUserByUsername(username);
     if (existingUser.rows.length > 0) {
       return res.status(400).json({ message: "Username already exists" });
@@ -47,6 +63,22 @@ const updateUser = async (req, res) => {
   try {
     const { user_id } = req.params;
     const { username, email, password } = req.body;
+
+    const existingUser = await userModel.getUserById(user_id);
+    if (existingUser.rows.length === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (existingUser.rows[0].username === username) {
+      const updatedUser = await userModel.updateUser(user_id, username, email, password);
+      return res.json(updatedUser.rows[0]);
+    }
+
+    const userWithSameUsername = await userModel.getUserByUsername(username);
+    if (userWithSameUsername.rows.length > 0) {
+      return res.status(400).json({ message: "Username already exists" });
+    }
+    
     const updatedUser = await userModel.updateUser(user_id, username, email, password);
     if (updatedUser.rows.length === 0) {
       return res.status(404).json({ message: "User not found" });
@@ -62,6 +94,9 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   try {
     const { user_id } = req.params;
+    if (!user_id || isNaN(user_id)) {
+      return res.status(400).json({ message: "Valid user_id is required" });
+    }
     const deletedUser = await userModel.deleteUser(user_id);
     if (deletedUser.rows.length === 0) {
       return res.status(404).json({ message: "User not found" });

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { Box, TextField, Button, FormControl, FormHelperText, Grid, Card, CardContent, CardActions, Typography, IconButton  } from '@mui/material'; 
+import { Box, TextField, Button, FormControl, FormHelperText, Grid, Card, CardContent, Typography, IconButton, InputLabel, Select, MenuItem, Stack, Chip } from '@mui/material'; 
 import { jwtDecode } from 'jwt-decode';
 import './audiolibrary.css'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -8,14 +8,28 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 
 const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3001';
+const categories = [
+  'Music',
+  'Podcasts',
+  'Audiobooks',
+  'Sound Effects',
+  'Voice Recordings',
+  'Educational',
+  'Other'
+];
 
 function AudioLibrary() {
+  
+
   const [audioFiles, setAudioFiles] = useState([]);
   const [currentAudio, setCurrentAudio] = useState(null);
   const [userId, setUserId] = useState(null);
   const [uploadFile, setUploadFile] = useState(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [category, setCategory] = useState('');
+  const fileInputRef = useRef(null);
+
 
   useEffect(() => {
     const token = localStorage.getItem('authToken'); 
@@ -75,6 +89,10 @@ function AudioLibrary() {
     setDescription(e.target.value);
   };
 
+  const handleCategoryChange = (e) => {
+    setCategory(e.target.value);
+  }
+  
   const handleUploadAudio = async (e) => {
     e.preventDefault();
     if (!uploadFile) return;
@@ -82,7 +100,8 @@ function AudioLibrary() {
     const formData = new FormData();
     formData.append('audio', uploadFile);
     formData.append('title', title);
-    formData.append('description', description || ' ');
+    formData.append('description', description);
+    formData.append('category', category);
 
     try {
       const response = await axios.post(`${API_BASE_URL}/api/audios/${userId}`, formData, {
@@ -93,6 +112,15 @@ function AudioLibrary() {
       if (response.status === 200) {
         setAudioFiles([response.data, ...audioFiles]);
         alert('Audio file uploaded successfully');
+        setUploadFile(null);
+        setTitle('');
+        setDescription('');
+        setCategory('');
+
+        if (fileInputRef.current) {
+          fileInputRef.current.value = null;
+        }        
+
       }
     } catch (error) {
       console.error('Error uploading audio file:', error);
@@ -101,23 +129,24 @@ function AudioLibrary() {
   };
   return (
     <Box sx={{ backgroundColor: '#8452de', minHeight: '100vh' }}>
-    <div>
+    <div style={{ display: 'flex', flexDirection:'column'}}>
       <h1 className='library-titles'>Audio Library</h1>
       <section className='upload-section'>
         <h3 className='library-titles upload-title '>Upload Audio File</h3>
         <form onSubmit={handleUploadAudio}>
           <Grid container spacing={2} alignItems="center" marginBottom={2}>
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
                 <label htmlFor="audios" className="drop-container" id="dropcontainer">
                   <span className="drop-title">Drop audio file here</span>
                   or
-                  <input type="file" id="audios" accept="audio/*" required onChange={handleFileChange}></input>
+                  <input type="file" id="audios" accept="audio/*" required onChange={handleFileChange} ref={fileInputRef}></input>
                 </label>                
         <FormHelperText>Upload an audio file</FormHelperText>
               </FormControl>
             </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={6}>
+              <Stack>
               <TextField
                 label="Title"
                 value={title}
@@ -126,8 +155,6 @@ function AudioLibrary() {
                 required
                 margin="normal"
               />
-            </Grid>
-            <Grid item sm={4}>
             <TextField
             label="Description"
             value={description}
@@ -137,6 +164,21 @@ function AudioLibrary() {
             rows={4}
             margin="normal"
           />
+            <InputLabel id="category-label">Category</InputLabel>
+              <Select
+                labelId="category-label"
+                value={category}
+                label="Category"
+                autoWidth
+                onChange={handleCategoryChange}
+              >
+                {categories.map((cat) => (
+                  <MenuItem key={cat} value={cat}>
+                    {cat}
+                  </MenuItem>
+                ))}
+              </Select>
+              </Stack>
             </Grid>
           </Grid>          
           <Button variant="contained" type="submit" fullWidth 
@@ -170,9 +212,12 @@ function AudioLibrary() {
                   </Box>
                 </Box>
                 <Box sx={{paddingBlockEnd:2 }}>
-                  <Typography variant="body2" color="text.secondary">
+                {audio.category && (
+                  <Chip label={audio.category} color="primary" size="small" sx={{ mb: 1 }} />
+                )}
+                <Typography variant="body2" color="text.secondary">
                   {audio.description}
-                  </Typography>
+                </Typography>
                 </Box>
                 </CardContent>
               </Card>

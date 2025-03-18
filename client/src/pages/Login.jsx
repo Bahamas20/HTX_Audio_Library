@@ -8,9 +8,7 @@ import {
   TextField,
   Typography,
   Checkbox,
-  Button,
-  Grid,
-  Link,
+  Button
 } from "@mui/material";
 import AudiotrackIcon from '@mui/icons-material/Audiotrack';
 import { useNavigate } from "react-router-dom";
@@ -23,7 +21,7 @@ const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3001
 
 const Login = () => {
   const [username, setUsername] = useState("admin");
-  const [password, setPassword] = useState("admin");
+  const [password, setPassword] = useState("adminpassword");
   const [remember, setRemember] = useState(false);
   const [errorMessage, setErrorMessage] = useState(""); 
   const [showPassword, setShowPassword] = useState(false);
@@ -56,8 +54,8 @@ const Login = () => {
 
   return (
     <Box sx={{ backgroundColor: '#682bd7', minHeight: '100vh', padding: 4 }}>
-    <Container maxWidth="xs">
-      <Paper elevation={10} sx={{ marginTop: 8, padding: 2, backgroundColor: '#2a2a2a', color: 'white' }}>
+    <Container maxWidth="sm">
+      <Paper elevation={10} sx={{ marginTop: 8, padding: 10, backgroundColor: '#2a2a2a', color: 'white' }}>
       <Box
         sx={{
           display: 'flex',

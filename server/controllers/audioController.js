@@ -8,9 +8,9 @@ exports.uploadAudio = [
     try {
       
       const { user_id } = req.params;
-      const {title, description } = req.body;
+      const {title, description, category } = req.body;
 
-      if (!title || !description || !req.file) {
+      if (!title || !req.file) {
         return res.status(400).json({ message: 'Missing required fields or file' });
       }
       
@@ -18,6 +18,7 @@ exports.uploadAudio = [
         user_id,
         title,
         description,
+        category,
         req.file.location
       );
 

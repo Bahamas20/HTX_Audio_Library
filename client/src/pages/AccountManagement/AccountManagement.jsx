@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Button, TextField, Grid, Typography } from '@mui/material';
+import { Button, TextField, Grid, Typography, Box, Card, CardContent} from '@mui/material';
 
 const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3001';
 
@@ -24,7 +24,12 @@ function AccountManagement() {
         setUsers([...users, response.data]);
         clearForm();
       })
-      .catch((error) => console.error("Error creating user:", error));
+      .catch((error) =>{
+        if (error.response.data.message) {
+          alert("There was an error creating user: " + error.response.data.message);
+        }
+        console.error("Error creating user:", error);
+      });
   };
 
   const handleEditUser = () => {
@@ -37,7 +42,12 @@ function AccountManagement() {
         setUsers(updatedUsers);
         clearForm();
       })
-      .catch((error) => console.error("Error updating user:", error));
+      .catch((error) =>{
+        if (error.response.data.message) {
+          alert("There was an error editing user: " + error.response.data.message);
+        }
+        console.error("Error updating user:", error);
+      });
   };
 
   const handleDeleteUser = (userId) => {
@@ -45,7 +55,12 @@ function AccountManagement() {
       .then(() => {
         setUsers(users.filter(user => user.user_id !== userId));
       })
-      .catch((error) => console.error("Error deleting user:", error));
+      .catch((error) =>{
+        if (error.response.data.message) {
+          alert("There was an error deleting user: " + error.response.data.message);
+        }
+        console.error("Error deleting user:", error);
+      });
   };
 
   const handleSelectUser = (user) => {
@@ -63,88 +78,105 @@ function AccountManagement() {
   };
 
   return (
-    <div>
-      <Typography variant="h4" gutterBottom>Account Management</Typography>
+    <div style={{ padding: '30px', backgroundColor:'#682bd7', height: '100vh' }}>
+      <Typography className='library-titles' variant="h4" gutterBottom align="center">Account Management</Typography>
 
-      <div>
-        <Typography variant="h6">Create / Edit User</Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', marginBottom: 3, backgroundColor: 'white', padding: '30px', borderRadius:'10px' }}>
+        <Typography variant="h6" gutterBottom>Create / Edit User</Typography>
+        
+        <Grid container spacing={2} justifyContent="center">
+          <Grid item xs={12} sm={6} md={4}>
             <TextField
               label="User Name"
               value={username}
               onChange={(e) => setUserName(e.target.value)}
               fullWidth
+              variant="outlined"
+              margin="normal"
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} sm={6} md={4}>
             <TextField
               label="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               fullWidth
+              variant="outlined"
+              margin="normal"
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} sm={6} md={4}>
             <TextField
               label="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               type="password"
               fullWidth
+              variant="outlined"
+              margin="normal"
             />
           </Grid>
         </Grid>
 
-        <Button
-          onClick={selectedUser ? handleEditUser : handleCreateUser}
-          variant="contained"
-          color="primary"
-          style={{ marginTop: 20 }}
-        >
-          {selectedUser ? 'Update User' : 'Create User'}
-        </Button>
-        {selectedUser && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
           <Button
-            onClick={clearForm}
-            variant="outlined"
-            style={{ marginTop: 20, marginLeft: 10 }}
+            onClick={selectedUser ? handleEditUser : handleCreateUser}
+            variant="contained"
+            color="primary"
+            sx={{ marginRight: 2 }}
           >
-            Cancel
+            {selectedUser ? 'Update User' : 'Create User'}
           </Button>
-        )}
-      </div>
 
-      <div style={{ marginTop: 30 }}>
-        <Typography variant="h6">User List</Typography>
-        <Grid container spacing={2}>
+          {selectedUser && (
+            <Button
+              onClick={clearForm}
+              variant="outlined"
+              color="secondary"
+            >
+              Cancel
+            </Button>
+          )}
+        </Box>
+      </Box>
+
+      <div>
+        <Typography className='library-titles' variant="h5" gutterBottom>User List</Typography>
+
+        <Grid container spacing={2} justifyContent="center">
           {users.map((user) => (
             <Grid item xs={12} sm={6} md={4} key={user.user_id}>
-              <div style={{ border: '1px solid #ccc', padding: 10, borderRadius: 5 }}>
-                <Typography>{user.username}</Typography>
-                <Typography>{user.email}</Typography>
-                <Button
-                  onClick={() => handleSelectUser(user)}
-                  variant="contained"
-                  color="secondary"
-                  style={{ marginRight: 10 }}
-                >
-                  Edit
-                </Button>
-                <Button
-                  onClick={() => handleDeleteUser(user.user_id)}
-                  variant="outlined"
-                  color="error"
-                >
-                  Delete
-                </Button>
-              </div>
+              <Card sx={{ borderRadius: 2, boxShadow: 3, padding: 2 }}>
+                <CardContent>
+                  <Typography variant="h6" gutterBottom>{user.username}</Typography>
+                  <Typography variant="body2" color="textSecondary" gutterBottom>{user.email}</Typography>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Button
+                      onClick={() => handleSelectUser(user)}
+                      variant="contained"
+                      color="secondary"
+                      size="small"
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      onClick={() => handleDeleteUser(user.user_id)}
+                      variant="outlined"
+                      color="error"
+                      size="small"
+                    >
+                      Delete
+                    </Button>
+                  </Box>
+                </CardContent>
+              </Card>
             </Grid>
           ))}
         </Grid>
       </div>
     </div>
   );
+
 }
 
 export default AccountManagement;

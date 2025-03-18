@@ -21,6 +21,9 @@ body {
 .upload-section {
     background-color: rgb(237, 237, 237);
     padding: 20px;
+    border-radius: 10px;
+    width: 70%;
+    align-self: center;
 }
   .drop-container {
     position: relative;

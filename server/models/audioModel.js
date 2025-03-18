@@ -14,11 +14,11 @@ const getAudioById = async (audio_id, user_id) => {
   );
 };
 
-const createAudio = async (user_id, title, description, s3_url) => {
+const createAudio = async (user_id, title, description, category, s3_url) => {
   return await pool.query(
-    `INSERT INTO audios (user_id, title, description, s3_url)
-     VALUES ($1, $2, $3, $4) RETURNING *`,
-    [user_id, title, description, s3_url]
+    `INSERT INTO audios (user_id, title, description, category, s3_url)
+     VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+    [user_id, title, description, category, s3_url]
   );
 };
 
