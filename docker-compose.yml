@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   frontend:
+    image: htx-frontend:latest
     build:
       context: ./client
     ports:
@@ -14,6 +15,7 @@ services:
       - app-network
 
   backend:
+    image: htx-backend:latest
     build:
       context: ./server
     ports:
