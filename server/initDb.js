@@ -14,7 +14,7 @@ async function runInitScript() {
     return;
   }
 
-  const initSqlPath = path.join(__dirname, 'docker-entrypoint-initdb.d', 'init.sql');
+  const initSqlPath = path.join(__dirname, 'docker-init', 'init.sql');
   const initSql = fs.readFileSync(initSqlPath, 'utf-8');
 
   try {
