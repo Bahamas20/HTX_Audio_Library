@@ -1,15 +1,20 @@
 const express = require("express");
-const app = express();
-const cors = require("cors")
+const cors = require("cors");
 const userRoutes = require('./routes/userRoutes');
-const audioRoutes = require('./routes/audioRoutes')
+const audioRoutes = require('./routes/audioRoutes');
+const runInitScript = require('./initDb');
+
+const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-app.use('/api', userRoutes); 
+runInitScript();
+
+app.use('/api', userRoutes);
 app.use('/api', audioRoutes);
-  
-app.listen(process.env.PORT || 3001, () => {
-    console.log("Server has started on port 3001");
-  });
+
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`🚀 Server has started on port ${PORT}`);
+});
