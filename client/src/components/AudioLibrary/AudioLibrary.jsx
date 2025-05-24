@@ -7,7 +7,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 
-const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3001';
+const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || 'https://htx-audio-library.onrender.com';
 const categories = [
   'Music',
   'Podcasts',

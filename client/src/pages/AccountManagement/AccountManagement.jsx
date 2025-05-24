@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, TextField, Grid, Typography, Box, Card, CardContent} from '@mui/material';
 
-const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3001';
+const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || 'https://htx-audio-library.onrender.com';
 
 function AccountManagement() {
   const [users, setUsers] = useState([]);

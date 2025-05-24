@@ -17,7 +17,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { InputAdornment, IconButton } from '@mui/material';
 
-const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3001';
+const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || 'https://htx-audio-library.onrender.com';
 
 const Login = () => {
   const [username, setUsername] = useState("admin");
