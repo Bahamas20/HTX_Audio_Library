@@ -10,6 +10,6 @@ app.use(express.json());
 app.use('/api', userRoutes); 
 app.use('/api', audioRoutes);
   
-app.listen(3001, () => {
+app.listen(process.env.PORT || 3001, () => {
     console.log("Server has started on port 3001");
   });
